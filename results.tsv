@@ -1,3 +1,4 @@
 experiment	mae
 baseline_random_forest	31.0488
 lag_1_7_14	26.5481
+lag_rolling_7_14	21.3975
