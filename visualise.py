@@ -29,14 +29,14 @@ model.fit(X_train, y_train)
 pred = model.predict(X_test)
 
 sample              = test_raw.copy()
-sample["predicted"] = pred
+sample["predicted"] = pd.Series(pred, index=X_test.index)
 pair = sample[
     (sample["kitchen_id"] == "Mumbai_Kitchen_1") &
     (sample["sku"]        == "Butter_Chicken_Bowl")
 ]
 
-axes[1].plot(pair["date"], pair["demand"],    label="Actual",    marker="o", markersize=3)
-axes[1].plot(pair["date"], pair["predicted"], label="Predicted", marker="x", markersize=3)
+axes[1].plot(pair["date"].values, pair["demand"].values,    label="Actual",    marker="o", markersize=3)
+axes[1].plot(pair["date"].values, pair["predicted"].values, label="Predicted", marker="x", markersize=3)
 axes[1].set_title("Actual vs predicted — Mumbai / Butter Chicken Bowl")
 axes[1].set_xlabel("Date")
 axes[1].set_ylabel("Demand")

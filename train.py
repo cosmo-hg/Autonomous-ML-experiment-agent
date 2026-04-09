@@ -2,6 +2,7 @@ import os
 import csv
 import pandas as pd
 from prepare import load_raw, temporal_split, evaluate
+from sklearn.ensemble import RandomForestRegressor
 
 # ── AGENT EDITS THIS BLOCK ────────────────────────────────────────────────────
 
@@ -10,25 +11,28 @@ EXPERIMENT_NAME = "lag_rolling_7_14"
 def build_features(df: pd.DataFrame, train_means=None):
     df = df.copy()
     df = df.sort_values(["kitchen_id", "sku", "date"])
-    df["day_of_week"] = df["date"].dt.dayofweek
-    df["is_weekend"]  = (df["day_of_week"] >= 5).astype(int)
-    df["lag_1"]       = df.groupby(["kitchen_id", "sku"])["demand"].shift(1)
-    df["lag_7"]       = df.groupby(["kitchen_id", "sku"])["demand"].shift(7)
-    df["lag_14"]      = df.groupby(["kitchen_id", "sku"])["demand"].shift(14)
-    df["roll_mean_7"]  = df.groupby(["kitchen_id", "sku"])["demand"].transform(
+
+    df["lag_7"]  = df.groupby(["kitchen_id", "sku"])["demand"].shift(7)
+    df["lag_14"] = df.groupby(["kitchen_id", "sku"])["demand"].shift(14)
+    df["roll_mean_7"] = df.groupby(["kitchen_id", "sku"])["demand"].transform(
         lambda x: x.shift(1).rolling(7).mean())
-    df["roll_std_7"]   = df.groupby(["kitchen_id", "sku"])["demand"].transform(
+    df["roll_std_7"] = df.groupby(["kitchen_id", "sku"])["demand"].transform(
         lambda x: x.shift(1).rolling(7).std())
     df["roll_mean_14"] = df.groupby(["kitchen_id", "sku"])["demand"].transform(
         lambda x: x.shift(1).rolling(14).mean())
+    df["roll_std_14"] = df.groupby(["kitchen_id", "sku"])["demand"].transform(
+        lambda x: x.shift(1).rolling(14).std())
+
     df = df.dropna()
     df = pd.get_dummies(df, columns=["kitchen_id", "sku"])
-    return df, train_means
-
-from sklearn.ensemble import RandomForestRegressor
+    return df, None
 
 def build_model():
-    return RandomForestRegressor(n_estimators=100, random_state=42)
+    return RandomForestRegressor(
+        n_estimators=100,
+        random_state=42,
+        n_jobs=-1
+    )
 
 # ── DO NOT EDIT BELOW THIS LINE ───────────────────────────────────────────────
 

@@ -4,7 +4,7 @@ import numpy as np
 np.random.seed(42)
 
 KITCHENS = ["Mumbai_Kitchen_1", "Delhi_Kitchen_1", "Bangalore_Kitchen_1"]
-SKUS     = ["Butter_Chicken_Bowl", "Behrouz_Biryani", "Faasos_Pizza", "Cheesy_Fries"]
+SKUS     = ["Butter_Chicken_Bowl", "Behrouz_Biryani", "Faasos_Rolls", "Cheesy_Fries"]
 DATES    = pd.date_range("2025-01-01", periods=90, freq="D")
 
 records = []

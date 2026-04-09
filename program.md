@@ -3,7 +3,7 @@
 Metric:  Mean Absolute Error (MAE) on a held-out temporal test set.
          Lower is better. Commit only when MAE improves.
 
-Baseline: 31.0488 (baseline_random_forest)
+Baseline: 21.3975 (lag_rolling_7_14)
 
 Constraints:
 - Each experiment must complete in under 8 minutes wall-clock time.
